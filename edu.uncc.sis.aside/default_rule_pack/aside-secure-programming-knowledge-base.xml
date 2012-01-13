@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Secure_programming>
+	<Knowledge type="OutputEncoding">
+		<Explanation>When untrusted data is output from the application and rendered by the browser, it may cause vulnerabilities such as Reflected Cross-site Scripting. The malicious content sent to the web browser often takes the form of a segment of JavaScript, but may also include HTML, Flash or any other type of code that the browser may execute. The variety of attacks based on XSS is almost limitless, but they commonly include transmitting private data like cookies or other session information to the attacker, redirecting the victim to web content controlled by the attacker, or performing other malicious operations on the user's machine under the guise of the vulnerable site.
+
+		The following JSP code segment reads an employee ID, eid, from an HTTP request and displays it to the user. 
+		
+		<![CDATA[<% String eid = request.getParameter(eid); %>]]>
+		...
+		<![CDATA[Employee ID: <%= eid %>]]>
+		
+		The code in this example operates correctly if eid contains only standard alphanumeric text. If eid has a value that includes meta-characters or source code, then the code will be executed by the web browser as it displays the HTTP response.
+        
+        Initially this might not appear to be much of a vulnerability. After all, why would someone enter a URL that causes malicious code to run on their own computer? The real danger is that an attacker will create the malicious URL, then use e-mail or social engineering tricks to lure victims into visiting a link to the URL. When victims click the link, they unwittingly reflect the malicious content through the vulnerable web application back to their own computers. This mechanism of exploiting vulnerable web applications is known as Reflected XSS. 
+        If you are interested in further knowing how these attacks happen, you can go to <![CDATA[http://www.owasp.org/index.php/Category:Vulnerability]]>
+        </Explanation>
+		<Remedition>
+		To prevent the aforementioned vulnerability from happening in your code, you need to output encode untrusted values before they are leaving your application. The proper encoding strategy to be used is case by case, depending on the type of the end receiver (e.g. browser) of the input.
+        </Remedition>
+	</Knowledge>
+
+    <Knowledge type="OutputEncoding">
+		<Explanation>When untrusted data is output from the application and rendered by the a log viewer, it may cause vulnerabilities such as Log Forging. 
+		
+		Applications typically use log files to store a history of events or transactions for later review, statistics gathering, or debugging. Depending on the nature of the application, the task of reviewing log files may be performed manually on an as-needed basis or automated with a tool that automatically culls logs for important events or trending information.
+
+        Interpretation of the log files may be hindered or misdirected if an attacker can supply data to the application that is subsequently logged verbatim. In the most benign case, an attacker may be able to insert false entries into the log file by providing the application with input that includes appropriate characters. If the log file is processed automatically, the attacker can render the file unusable by corrupting the format of the file or injecting unexpected characters. A more subtle attack might involve skewing the log file statistics. Forged or otherwise, corrupted log files can be used to cover an attacker's tracks or even to implicate another party in the commission of a malicious act. In the worst case, an attacker may inject code or other commands into the log file and take advantage of a vulnerability in the log processing utility.
+	
+		<![CDATA[String val = request.getParameter("val");
+                 try {
+                     int value = Integer.parseInt(val);
+                 }catch (NumberFormatException) {
+                     log.info("Failed to parse val = " + val);
+                 }]]>
+		If a user submits the string "twenty-one" for val, the following entry is logged:
+		
+		<![CDATA[INFO: Failed to parse val=twenty-one]]>
+		
+		However, if an attacker submits the string <![CDATA["twenty-one%0a%0aINFO:+User+logged+out%3dbadguy"]]>, the following entry is logged:
+		
+	    <![CDATA[INFO: Failed to parse val=twenty-one
+
+                 INFO: User logged out=badguy]]>
+	
+        Clearly, attackers can use this same mechanism to insert arbitrary log entries.
+        </Explanation>
+		<Remedition>
+		To prevent the aforementioned vulnerability from happening in your code, you need to output encode untrusted values before they are leaving your application. The proper encoding strategy to be used is case by case, depending on the type of the end receiver (e.g. browser) of the input.
+        </Remedition>
+	</Knowledge>
+
+	<Knowledge type="InputValidation">
+		<Explanation>
+		When untrusted input gets into the application without proper validation and is used by critical operations, it may subvert the original semantics of that operation. For example, the following code dynamically constructs and executes a SQL query that searches for items matching a specified name based on the value that is passed by the client. The query restricts the items displayed to those where the owner matches the user name of the currently-authenticated user.
+        <![CDATA[String userName = ctx.getAuthenticatedUserName();
+                 String itemName = request.getParameter("itemName);
+                 String query = SELECT * FROM items WHERE owner = 'userName' AND itemname = 'itemName';
+                 ResultSet rs = stmt.execute(query);]]>
+        The query that this code intends to execute follows:
+        <![CDATA[SELECT * FROM items WHERE owner = <userName> AND itemname = <itemName>;]]>
+                 
+        However, because the query is constructed dynamically by concatenating a constant base query string and a user input string, the query only behaves correctly if itemName does not contain a single-quote character. If an attacker with the user name wiley enters the string name' OR 'a'='a for itemName, then the query becomes the following:
+        <![CDATA[SELECT * FROM items	WHERE owner = 'wiley' AND itemname = 'name' OR 'a'='a';]]>
+        
+        The addition of the <![CDATA[OR 'a'='a']]> condition causes the where clause to always evaluate to true, so the query becomes logically equivalent to the much simpler query:
+        <![CDATA[SELECT * FROM items;]]>
+        Untrusted inputs can be exploited to launch different types of attacks such as Cross-site scripting, Log forging, SQL Injection, Command Injection and etc, depending on the type of the input and the type of operations that will use this input.
+		</Explanation>
+		<Remedition>
+        The best practice to avoid introducing the aforementioned vulnerabilities into your code is to validate all the values that are passed into your application. One option is to validate the input against established Regular Expression.
+		</Remedition>
+	</Knowledge>
+	
+	<Knowledge type="InputValidation">
+		<Explanation>
+		When untrusted input gets into the application without proper validation and is used by critical operations, it may subvert the original semantics of that operation. Consider the following issue that is commonly dubbed as Header Manipulation:
+        
+        As with many software security vulnerabilities, Header Manipulation is a means to an end, not an end in itself. At its root, the vulnerability is straightforward: an attacker passes malicious data to a vulnerable application, and the application includes the data in an HTTP response header.
+
+        One of the most common Header Manipulation attacks is HTTP Response Splitting. To mount a successful Http Response Splitting exploit, the application must allow input that contains CR (carriage return, also given by <![CDATA[%0d or \r]]>) and LF (line feed, also given by <![CDATA[%0a or \n]]>)characters into the header. These characters not only give attackers control of the remaining headers and body of the response the application intends to send, but also allows them to create additional responses entirely under their control.
+        <![CDATA[String author = request.getParameter(AUTHOR_PARAM);
+                 ...
+                 Cookie cookie = new Cookie("author", author);
+                 cookie.setMaxAge(cookieExpiration);
+                 response.addCookie(cookie);]]>
+                 
+        Assuming a string consisting of standard alpha-numeric characters, such as <![CDATA["Jane Smith"]]>, is submitted in the request the HTTP response including this cookie might take the following form:
+        
+        <![CDATA[HTTP/1.1 200 OK
+                 ...
+                 Set-Cookie: author=Jane Smith
+                 ...]]>
+        
+        However, because the value of the cookie is formed of unvalidated user input the response will only maintain this form if the value submitted for AUTHOR_PARAM does not contain any CR and LF characters. If an attacker submits a malicious string, such as <![CDATA["Wiley Hacker\r\nHTTP/1.1 200 OK\r\n..."]]>, then the HTTP response would be split into two responses of the following form:
+        <![CDATA[HTTP/1.1 200 OK
+                 ...
+                 Set-Cookie: author=Wiley Hacker
+
+                 HTTP/1.1 200 OK
+                 ...]]>
+                 
+        Clearly, the second response is completely controlled by the attacker and can be constructed with any header and body content desired. The ability of attacker to construct arbitrary HTTP responses permits a variety of resulting attacks, including: cross-user defacement, web and browser cache poisoning, cross-site scripting and page hijacking. 
+		</Explanation>
+		<Remedition>
+        The best practice to avoid introducing the aforementioned vulnerabilities into your code is to validate all the values that are passed into your application. One option is to validate the input against established Regular Expression.
+		</Remedition>
+	</Knowledge>
+	
+	<Knowledge type="InputValidation">
+		<Explanation>
+		When untrusted input gets into the application without proper validation and is used by critical operations, it may subvert the original semantics of that operation. For example, the following code shows a Dangerous File Inclusion case.
+        
+        Many modern web scripting languages enable code re-use and modularization through the ability to include additional source files within one encapsulating file. This ability is often used to apply a standard look and feel to an application (templating), share functions without the need for compiled code, or break the code into smaller more manageable files. Included files are interpreted as part of the parent file and executed in the same manner. File inclusion vulnerabilities occur when the path of the included file is controlled by unvalidated user input. 
+        <![CDATA[...
+                 <jsp:include page="<%= (String)request.getParameter(\"template\")%>">
+                 ...]]>
+                 
+        In the above example, an attacker can take complete control of the dynamic include statement by supplying a malicious value for template that causes the program to include a file from an external site. 
+        If the attacker specifies a valid file to a dynamic include statement, the contents of that file will be passed to the JSP interpreter. In the case of a plain text file, such as /etc/shadow, the file might be rendered as part of the HTML output. Worse, if the attacker can specify a path to a remote site controlled by the attacker, then the dynamic include statement will execute arbitrary malicious code supplied by the attacker.
+		</Explanation>
+		<Remedition>
+        The best practice to avoid introducing the aforementioned vulnerabilities into your code is to validate all the values that are passed into your application. One option is to validate the input against established Regular Expression.
+		</Remedition>
+	</Knowledge>
+	
+	<Knowledge type="InputValidation">
+		<Explanation>
+		When untrusted input gets into the application without proper validation and is used by critical operations, it may subvert the original semantics of that operation. Here, we present a case of Cross-site Scripting vulnerability.
+        
+        The malicious content sent to the web browser often takes the form of a segment of JavaScript, but may also include HTML, Flash or any other type of code that the browser may execute. The variety of attacks based on XSS is almost limitless, but they commonly include transmitting private data like cookies or other session information to the attacker, redirecting the victim to web content controlled by the attacker, or performing other malicious operations on the user's machine under the guise of the vulnerable site.
+        
+        <![CDATA[<% String eid = request.getParameter("eid"); %> 
+                 ...
+                 Employee ID: <%= eid %>]]>
+                 
+        The code in this example operates correctly if eid contains only standard alphanumeric text. If eid has a value that includes meta-characters or source code, then the code will be executed by the web browser as it displays the HTTP response.
+        Initially this might not appear to be much of a vulnerability. After all, why would someone enter a URL that causes malicious code to run on their own computer? The real danger is that an attacker will create the malicious URL, then use e-mail or social engineering tricks to lure victims into visiting a link to the URL. When victims click the link, they unwittingly reflect the malicious content through the vulnerable web application back to their own computers. This mechanism of exploiting vulnerable web applications is known as Reflected XSS.
+		</Explanation>
+		<Remedition>
+        The best practice to avoid introducing the aforementioned vulnerabilities into your code is to validate all the values that are passed into your application. One option is to validate the input against established Regular Expression.
+		</Remedition>
+	</Knowledge>
+
+</Secure_programming>

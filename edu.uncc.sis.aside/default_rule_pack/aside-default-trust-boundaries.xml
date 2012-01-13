@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TrustBoundaries>
+	
+ <TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.(http\.Http)?ServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getParameter]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.(http\.Http)ServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getContentType]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.(http\.Http)ServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getProtocol]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.(http\.Http)?ServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getScheme]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.(http\.Http)?ServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getServerName]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.(http\.Http)ServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getAuthType]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.http\.Cookie]]></DeclarationClass>
+		<MethodName><![CDATA[getComment]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.http\.Cookie]]></DeclarationClass>
+		<MethodName><![CDATA[getValue]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.http\.Cookie]]></DeclarationClass>
+		<MethodName><![CDATA[getPath]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.http\.HttpServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getQueryString]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.http\.HttpServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getHeader]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.http\.HttpServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getPathInfo]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.http\.HttpServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getRequestURI]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.ServletConfig]]></DeclarationClass>
+		<MethodName><![CDATA[getInitParameter]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+
+	<!--
+		<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[java.io.BufferedReader]]></DeclarationClass>
+		<MethodName><![CDATA[readLine]]></MethodName>
+		<ReturnType><![CDATA[java.lang.String]]></ReturnType> </TrustBoundary>
+	-->
+
+<!-- 
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[javax\.servlet\.(http\.Http)?ServletRequest]]></DeclarationClass>
+		<MethodName><![CDATA[getParameterMap]]></MethodName>
+		<ReturnType><![CDATA[java\.util\.Map]]></ReturnType>
+	</TrustBoundary>
+ -->
+
+	<TrustBoundary type="MethodInvocation" attr="output">
+		<DeclarationClass><![CDATA[java\.io\.PrintStream]]></DeclarationClass>
+		<MethodName><![CDATA[println]]></MethodName>
+		<ArgumentOrdinal>0</ArgumentOrdinal>
+	</TrustBoundary>
+	
+	<TrustBoundary type="MethodInvocation" attr="output">
+		<DeclarationClass><![CDATA[java\.io\.PrintWriter]]></DeclarationClass>
+		<MethodName><![CDATA[print(ln)|append |write]]></MethodName>
+		<ArgumentOrdinal>0</ArgumentOrdinal>
+	</TrustBoundary>
+
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[org\.hibernate\.Criteria]]></DeclarationClass>
+		<MethodName><![CDATA[list]]></MethodName>
+		<ReturnType><![CDATA[java\.util\.(Array)List]]></ReturnType>
+	</TrustBoundary>
+	
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[java\.util\.Properties]]></DeclarationClass>
+		<MethodName><![CDATA[getProperty]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+	
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[java\.lang\.System]]></DeclarationClass>
+		<MethodName><![CDATA[getProperty]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+	
+	<TrustBoundary type="MethodInvocation" attr="input">
+		<DeclarationClass><![CDATA[java\.sql\.ResultSet]]></DeclarationClass>
+		<MethodName><![CDATA[getString]]></MethodName>
+		<ReturnType><![CDATA[java\.lang\.String]]></ReturnType>
+	</TrustBoundary>
+	<!--
+		<TrustBoundary type="MethodDeclaration" attr="input | output">
+		<DeclarationClass><![CDATA[^*]]></DeclarationClass>
+		<MethodName><![CDATA[main]]></MethodName>
+		<ArgumentOrdinal>0</ArgumentOrdinal> </TrustBoundary>
+	-->
+
+</TrustBoundaries>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<!--
+
+		<extension id="AsideBuilder" name="Aside Builder"
+		point="org.eclipse.core.resources.builders"> <builder
+		hasNature="true"> <run
+		class="edu.uncc.sis.aside.builder.AsideBuilder"> </run> </builder>
+		</extension> <extension id="AsideNature" name="Aside Nature"
+		point="org.eclipse.core.resources.natures"> <runtime> <run
+		class="edu.uncc.sis.aside.builder.AsideNature"> </run> </runtime>
+		<builder id="edu.uncc.sis.aside.AsideBuilder"> </builder>
+		<requires-nature id="org.eclipse.jdt.core.javanature">
+		</requires-nature> </extension>
+	-->
+	
+
+	<extension id="AsideViews" point="org.eclipse.ui.views">
+		<category id="edu.uncc.sis.aside" name="Aside">
+		</category>
+		<view category="edu.uncc.sis.aside" class="edu.uncc.sis.aside.views.ValidationRulesView"
+			icon="platform:/plugin/edu.uncc.sis.aside/icons/map.png" id="edu.uncc.sis.aside.views.ValidationRulesView"
+			name="Validation Rules View">
+		</view>
+		 <view id="edu.uncc.sis.aside.views.complimentaryExplanationView" name="Problem Description" class="edu.uncc.sis.aside.views.ExplanationView" icon="icons/map.png"
+      category="edu.uncc.sis.aside"/>
+	</extension>
+	
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
+			<view id="edu.uncc.sis.aside.views.ValidationRulesView" ratio="0.5"
+				relationship="right" relative="org.eclipse.ui.views.TaskList">
+			</view>
+		</perspectiveExtension>
+	</extension>
+
+	<extension point="org.eclipse.ui.preferencePages">
+		<page class="edu.uncc.sis.aside.preferences.AsideRulePreferencePage"
+			id="edu.uncc.sis.aside.preferences.AsidePreferencePage" name="ASIDE">
+		</page>
+	</extension>
+
+	<extension id="AsidePreferences" point="org.eclipse.core.runtime.preferences">
+		<initializer class="edu.uncc.sis.aside.preferences.PreferenceInitializer">
+		</initializer>
+	</extension>
+
+	<extension id="AsideContextMenus" point="org.eclipse.ui.popupMenus">
+		<objectContribution id="edu.uncc.sis.aside.projectContribution"
+			objectClass="org.eclipse.core.resources.IResource" adaptable="true">
+			<filter name="projectNature" value="org.eclipse.jdt.core.javanature" />		
+			<action class="edu.uncc.sis.aside.popup.actions.AddAsideRulesAction"
+				enablesFor="+" icon="platform:/plugin/edu.uncc.sis.aside/icons/venus.png"
+				id="edu.uncc.sis.aside.AddAsideRulesFolderAction" label="Add Aside Rules"
+				menubarPath="edu.uncc.sis.aside.menu/aside_group" style="push"
+				tooltip="Add Aside Rules Folder to Selected Java Project">
+				<enablement>
+					<or>
+						<objectClass name="org.eclipse.core.resources.IProject" />
+						<objectClass name="org.eclipse.core.resources.IFolder" />
+						<and>
+							<objectClass name="org.eclipse.core.resources.IFile" />
+							<objectState name="extension" value="java" />
+						</and>
+						<and>
+							<objectClass name="org.eclipse.core.resources.IFile" />
+							<objectState name="extension" value="jsp" />
+						</and>
+					</or>
+				</enablement>
+			</action>
+			
+			<action class="edu.uncc.sis.aside.popup.actions.ManuallyLaunchAsideOnTargetAction"
+				enablesFor="+" icon="platform:/plugin/edu.uncc.sis.aside/icons/sunshine.png"
+				id="edu.uncc.sis.aside.LaunchAsideOnTargetAction" label="Run ASIDE"
+				menubarPath="edu.uncc.sis.aside.menu/aside_group" style="push"
+				tooltip="Manually launch ASIDE against selected target(s)">
+				<enablement>
+					<or>
+						<objectClass name="org.eclipse.core.resources.IProject" />
+						<objectClass name="org.eclipse.core.resources.IFolder" />
+						<and>
+							<objectClass name="org.eclipse.core.resources.IFile" />
+							<objectState name="extension" value="java" />
+						</and>
+						<and>
+							<objectClass name="org.eclipse.core.resources.IFile" />
+							<objectState name="extension" value="jsp" />
+						</and>
+					</or>
+				</enablement>
+			</action>
+			
+		</objectContribution>
+	</extension>
+
+<extension
+         point="org.eclipse.ui.menus">
+         
+        <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?before=additions">
+            <menu id="edu.uncc.sis.aside.menu" label="ASIDE"
+				icon="platform:/plugin/edu.uncc.sis.aside/icons/s.png">
+				<separator name="aside_additions" visible="false"/>		
+				<groupMarker name="aside_group" />
+			</menu>
+      </menuContribution>
+         
+      <menuContribution
+            locationURI="popup:org.eclipse.jdt.ui.CompilationUnitEditor.EditorContext?after=edu.uncc.sis.aside.menu">
+         <menu
+               id="edu.uncc.sis.aside.auxiliary.popupMenu.rootMenuItem"
+               label="ESAPI Validator"
+               tooltip="Functions to make your application more secure">     
+            <dynamic
+                  class="edu.uncc.sis.aside.auxiliary.popup.actions.DynamicMenuContributionItem"
+                  id="edu.uncc.sis.aside.auxiliary.dynamicMenuContributionItem">
+            </dynamic>
+            <separator
+                  name="rootSeparator"
+                  visible="false">
+            </separator>
+         </menu>
+      </menuContribution>
+   </extension>
+   <!--
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="edu.uncc.sis.aside.auxiliary.commandCategory"
+            name="dynamicCommandCategory">
+      </category>
+      <command
+            categoryId="edu.uncc.sis.aside.auxiliary.commandCategory"
+            id="edu.uncc.sis.aside.auxiliary.dynamicCommand"
+            name="dynamicCommand">
+         <commandParameter
+               id="edu.uncc.sis.aside.auxiliary.popupMenus.commandParameter"
+               name="name"
+               optional="true">
+         </commandParameter>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="edu.uncc.sis.aside.auxiliary.popup.actions.DynamicCommandHandler"
+            commandId="edu.uncc.sis.aside.auxiliary.dynamicCommand">
+      </handler>
+   </extension>
+   -->
+   
+	<extension id="AsideHelpContext" point="org.eclipse.help.contexts">
+		<contexts file="contexts.xml" plugin="edu.uncc.sis.aside">
+		</contexts>
+	</extension>
+
+	<extension id="AsideMarker" point="org.eclipse.core.resources.markers"
+		name="Bad Security Practice">
+		<attribute name="type">
+		</attribute>
+		<persistent value="true">
+		</persistent>
+		<super type="org.eclipse.core.resources.textmarker">
+		</super>
+		<super type="org.eclipse.core.resources.problemmarker"></super>
+		<attribute name="edu.uncc.sis.aside.marker.flow">
+		</attribute>
+		<attribute name="edu.uncc.sis.aside.marker.validationType">
+		</attribute>
+		<attribute name="edu.uncc.sis.aside.marker.targetPosition">
+		</attribute>
+	</extension>
+
+	<extension id="AsideMarkerAnnnotation" point="org.eclipse.ui.editors.annotationTypes">
+		<type markerSeverity="1" markerType="edu.uncc.sis.aside.AsideMarker"
+			name="edu.uncc.sis.aside.asideMarkerAnnotation">
+		</type>
+		<type name="edu.uncc.sis.aside.invisibleAnnotation"></type>
+	</extension>
+
+	<extension id="AsideMarkerAnnotationSpecification"
+		point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationImageProvider="edu.uncc.sis.aside.markers.AsideMarkerImageProvider"
+			annotationType="edu.uncc.sis.aside.asideMarkerAnnotation"
+			colorPreferenceKey="asideColorPreference" colorPreferenceValue="58,87,80"
+			contributesToHeader="true" highlightPreferenceKey="asideHighlightPreference"
+			highlightPreferenceValue="true" icon="icons/devil.png"
+			includeOnPreferencePage="true" isGoToNextNavigationTarget="true"
+			isGoToNextNavigationTargetKey="asideIsGoToNextNavigationTarget"
+			isGoToPreviousNavigationTarget="true"
+			isGoToPreviousNavigationTargetKey="asideIsGoToPreviousNavigationTarget"
+			label="ASIDE Warnings" overviewRulerPreferenceKey="asideOverviewRulerPreference"
+			overviewRulerPreferenceValue="true" presentationLayer="10"
+			quickFixIcon="icons/devil.png" showInNextPrevDropdownToolbarAction="true"
+			showInNextPrevDropdownToolbarActionKey="asideShowInNextPrevDropdownToolbarAction"
+			symbolicIcon="warning" textPreferenceKey="asideTextPreference"
+			textPreferenceValue="true" textStylePreferenceKey="asideTextStylePreference"
+			textStylePreferenceValue="DASHED_BOX" verticalRulerPreferenceKey="asideVerticalRulerPreference"
+			verticalRulerPreferenceValue="true">
+		</specification>
+	</extension>
+
+	<extension id="AsideMarkerImageProvider" point="org.eclipse.ui.ide.markerImageProviders">
+		<imageprovider class="edu.uncc.sis.aside.markers.AsideMarkerImageProvider"
+			icon="icons/devil.png" id="edu.uncc.sis.aside.AsideImageProvider"
+			markertype="edu.uncc.sis.aside.AsideMarker">
+		</imageprovider>
+	</extension>
+
+	<extension id="AsideMarkerHelp" point="org.eclipse.ui.ide.markerHelp">
+		<markerHelp helpContextId="edu.uncc.sis.aside.AsideHelpContext"
+			markerType="edu.uncc.sis.aside.AsideMarker">
+		</markerHelp>
+	</extension>
+
+    <!-- attribute state is a flag that indicates whether the decorator is on by default, lightweight decoration is processed in a background thread other then UI thread -->
+	<extension id="AsideDecorator" point="org.eclipse.ui.decorators">
+		<decorator adaptable="true"
+			id="edu.uncc.sis.aside.decorator" label="Aside Decorator"
+			lightweight="true" state="true"
+			class="edu.uncc.sis.aside.decorators.AsideLightweightDecorator" >
+	        <enablement>
+				<or>
+					<objectClass name="org.eclipse.core.resources.IResource" />									
+				</or>
+			</enablement>
+		</decorator>
+	</extension>
+
+	<extension id="AsideMarkerResolution" point="org.eclipse.ui.ide.markerResolution">
+		<markerResolutionGenerator
+			class="edu.uncc.sis.aside.markers.AsideMarkerInputResolutionGenerator"
+			markerType="edu.uncc.sis.aside.AsideMarker">
+			<!--
+				<attribute name="edu.uncc.sis.aside.marker.flow" value="input">
+				</attribute>
+			-->
+		</markerResolutionGenerator>
+		<markerResolutionGenerator
+			class="edu.uncc.sis.aside.markers.AsideMarkerOutputResolutionGenerator"
+			markerType="edu.uncc.sis.aside.AsideMarker">
+			<!--
+				<attribute name="edu.uncc.sis.aside.marker.flow" value="output">
+				</attribute>
+			-->
+		</markerResolutionGenerator>
+	</extension>
+
+	<extension
+       id="AsideCompilationParticipant"
+       point="org.eclipse.jdt.core.compilationParticipant">
+		<compilationParticipant
+			class="edu.uncc.sis.aside.builder.AsideCompilationParticipant"
+			createsProblems="false" id="edu.uncc.sis.aside.AsideCompilationParticipant"
+			modifiesEnvironment="false" requiredSourceLevel="1.5">
+		</compilationParticipant>
+	</extension>
+	
+<extension
+       id="AsideStartup"
+       point="org.eclipse.ui.startup">
+    <startup class="edu.uncc.sis.aside.AsideStartup"/>
+ </extension>
+
+</plugin>

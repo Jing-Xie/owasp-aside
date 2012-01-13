@@ -1,0 +1,17 @@
+Bundle-ActivationPolicy: lazy
+Bundle-SymbolicName: edu.uncc.sis.aside.logging;singleton:=true
+Bundle-Vendor: UNC Charlotte
+Bundle-Version: 1.0.0.qualifier
+Bundle-Name: ASIDE Logging Facility
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.0.0",
+ org.apache.log4j;bundle-version="1.2.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Activator: edu.uncc.sis.aside.logging.AsideLoggingPlugin
+Export-Package: edu.uncc.sis.aside.logging;
+  uses:="org.eclipse.core.runtime,
+   org.apache.log4j,
+   org.osgi.framework,
+   org.apache.log4j.spi"
+Bundle-ManifestVersion: 2
+Eclipse-BuddyPolicy: registered
+Eclipse-RegisterBuddy: org.apache.log4j
